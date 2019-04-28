@@ -24,9 +24,9 @@ class CreateThreadsTest extends TestCase
     /** @test */
     public function an_authenticated_user_can_create_new_forum_threads()
     {
-        $user = factory(User::class)->create();
+        $user = create(User::class);
 
-        $thread = factory(Thread::class)->make([
+        $thread = make(Thread::class, [
             'title' => 'My new thread',
             'body' => 'Body of my new thread',
         ]);
