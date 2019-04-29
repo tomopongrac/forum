@@ -41,7 +41,9 @@ class CreateThreadsTest extends TestCase
         $this->actingAs($user)
             ->post(route('threads.store'), $thread->toArray());
 
-        $this->get(route('threads.show', ['thread' => $thread]))
+        $threadId = Thread::where('title', $thread->title)->where('body', $thread->body)->first()->id;
+
+        $this->get(route('threads.show', ['thread' => $threadId]))
             ->assertSee($thread->title)
             ->assertSee($thread->body);
     }
