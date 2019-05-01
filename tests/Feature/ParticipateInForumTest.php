@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Channel;
+use App\Reply;
 use App\Thread;
 use App\User;
 use Tests\TestCase;
@@ -36,5 +37,20 @@ class ParticipateInForumTest extends TestCase
 
         $this->get(route('threads.show', ['channel' => $channel->slug, 'thread' => $thread]))
             ->assertSee('New reply');
+    }
+
+    /** @test */
+    public function a_reply_requires_a_body()
+    {
+        $this->withExceptionHandling();
+
+        $channel = create(Channel::class);
+        $thread = create(Thread::class, ['channel_id' => $channel->id]);
+        $reply = make(Reply::class, ['body' => null]);
+
+        $response = $this->actingAs(create(User::class))
+            ->post(route('reply.store', ['channel' => $channel->slug, 'thread' => $thread->id]), $reply->toArray());
+
+        $response->assertSessionHasErrors('body');
     }
 }
