@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Channel;
 use App\Thread;
 use Illuminate\Http\Request;
 
@@ -44,11 +45,12 @@ class ThreadController extends Controller
     {
         $thread = new Thread();
         $thread->user_id = auth()->id();
+        $thread->channel_id = $request->input('channel_id');
         $thread->title = $request->input('title');
         $thread->body = $request->input('body');
         $thread->save();
 
-        return redirect(route('threads.show', ['thread' => $thread]));
+        return redirect(route('threads.show', ['channel' => $thread->channel->slug, 'thread' => $thread]));
     }
 
     /**
@@ -57,7 +59,7 @@ class ThreadController extends Controller
      * @param  \App\Thread  $thread
      * @return \Illuminate\Http\Response
      */
-    public function show(Thread $thread)
+    public function show(Channel $channel, Thread $thread)
     {
         return view('threads.show', compact('thread'));
     }

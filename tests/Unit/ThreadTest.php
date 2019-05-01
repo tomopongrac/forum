@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Thread;
 use App\User;
+use App\Channel;
 use Illuminate\Database\Eloquent\Collection;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -14,19 +15,19 @@ class ThreadTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function a_thread_has_replies()
-    {
-        $thread = factory(Thread::class)->create();
-
-        $this->assertInstanceOf(Collection::class, $thread->replies);
-    }
-
-    /** @test */
     public function a_thread_has_creator()
     {
         $thread = factory(Thread::class)->create();
 
         $this->assertInstanceOf(User::class, $thread->creator);
+    }
+    
+    /** @test */
+    public function a_thread_has_replies()
+    {
+        $thread = factory(Thread::class)->create();
+
+        $this->assertInstanceOf(Collection::class, $thread->replies);
     }
 
     /** @test */
@@ -40,5 +41,13 @@ class ThreadTest extends TestCase
         ]);
 
         $this->assertCount(1, $thread->replies);
+    }
+
+    /** @test */
+    public function a_thread_belongs_to_channel()
+    {
+        $thread = create(Thread::class);
+
+        $this->assertInstanceOf(Channel::class, $thread->channel);
     }
 }

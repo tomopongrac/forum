@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Channel;
 use App\Thread;
 use App\User;
 use Tests\TestCase;
@@ -25,9 +26,12 @@ class CreateThreadsTest extends TestCase
     /** @test */
     public function an_authenticated_user_can_create_new_forum_threads()
     {
+        $this->withoutExceptionHandling();
         $user = create(User::class);
+        $channel = create(Channel::class);
 
         $thread = make(Thread::class, [
+            'channel_id' => $channel->id,
             'title' => 'My new thread',
             'body' => 'Body of my new thread',
         ]);
@@ -37,7 +41,7 @@ class CreateThreadsTest extends TestCase
 
         $threadId = Thread::where('title', $thread->title)->where('body', $thread->body)->first()->id;
 
-        $this->get(route('threads.show', ['thread' => $threadId]))
+        $this->get(route('threads.show', ['channel' => $channel->slug, 'thread' => $threadId]))
             ->assertSee($thread->title)
             ->assertSee($thread->body);
     }

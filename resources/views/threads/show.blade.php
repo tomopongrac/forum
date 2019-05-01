@@ -32,7 +32,7 @@
         @if (auth()->check())
             <div class="row justify-content-center">
                 <div class="col-md-8">
-                    <form method="POST" action="{{ route('reply.store', ['thread' => $thread]) }}">
+                    <form method="POST" action="{{ route('reply.store', ['channel' => $thread->channel->slug, 'thread' => $thread]) }}">
                         @csrf
                         <div class="form-group">
                             <textarea class="form-control" id="body" rows="3" name="body"

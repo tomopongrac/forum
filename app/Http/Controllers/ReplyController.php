@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Channel;
 use App\Reply;
 use App\Thread;
 use Illuminate\Http\Request;
@@ -39,14 +40,14 @@ class ReplyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Thread $thread)
+    public function store(Request $request, Channel $channel, Thread $thread)
     {
         $thread->addReply([
             'body' => $request->input('body'),
             'user_id' => auth()->id(),
         ]);
 
-        return redirect(route('threads.show', ['thread' => $thread]));
+        return redirect(route('threads.show', ['channel' => $thread->channel->slug, 'thread' => $thread]));
     }
 
     /**
