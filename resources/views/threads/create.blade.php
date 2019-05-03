@@ -16,7 +16,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="body">Body</label>
-                                <textarea class="form-control" id="body" rows="3" placeholder="What is thread body?"></textarea>
+                                <textarea class="form-control" id="body" rows="3" name="body" placeholder="What is thread body?"></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary">Publish</button>
                         </form>
