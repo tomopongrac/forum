@@ -18,6 +18,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::resource('threads', 'ThreadController')->except(['show']);
+Route::get('threads/{channel}', 'ThreadController@index')->name('threads.channel');
 Route::get('threads/{channel}/{thread}', 'ThreadController@show')->name('threads.show');
 
 Route::post('threads/{channel}/{thread}/reply', 'ReplyController@store')->name('reply.store');
