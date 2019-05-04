@@ -2,37 +2,29 @@
 
 @section('content')
     <div class="container">
-        <div class="row justify-content-center mb-3">
+        <div class="row">
             <div class="col-md-8">
-                <div class="card">
+                <div class="card mb-3">
                     <div class="card-header">
-                        <a href="#">{{ $thread->creator->name }} posted:</a>
+                        <a href="#">{{ $thread->creator->name }}</a> posted:
                         {{ $thread->title }}</div>
                     <div class="card-body">
                         {{ $thread->body }}
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="row justify-content-center mb-3">
-            <div class="col-md-8">
                 @foreach($thread->replies as $reply)
-                    <div class="card">
+                    <div class="card mb-3">
                         <div class="card-header">
-                            {{ $reply->owner->name }} said {{ $reply->created_at->diffForHumans() }}
+                            <a href="#">{{ $reply->owner->name }}</a> said {{ $reply->created_at->diffForHumans() }}
                         </div>
                         <div class="card-body">
                             {{ $reply->body }}
                         </div>
                     </div>
                 @endforeach
-            </div>
-        </div>
-
-        @if (auth()->check())
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <form method="POST" action="{{ route('reply.store', ['channel' => $thread->channel->slug, 'thread' => $thread]) }}">
+                @if (auth()->check())
+                    <form method="POST"
+                          action="{{ route('reply.store', ['channel' => $thread->channel->slug, 'thread' => $thread]) }}">
                         @csrf
                         <div class="form-group">
                             <textarea class="form-control" id="body" rows="3" name="body"
@@ -40,12 +32,21 @@
                         </div>
                         <button type="submit" class="btn btn-primary">Post</button>
                     </form>
+                @else
+                    <p class="text-center">Please <a href="{{ route('login') }}">sign in</a> to comment!</p>
+                @endif
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        This thread was published {{ $thread->created_at->diffForHumans() }} by <a
+                                href="#">{{ $thread->creator->name }}</a>,
+                        and currently
+                        has {{ $thread->replies_count }} {{ \Str::plural('comment', $thread->replies_count)}}.
+                    </div>
                 </div>
             </div>
-        @else
-            <p class="text-center">Please <a href="{{ route('login') }}">sign in</a> to comment!</p>
-        @endif
-
+        </div>
     </div>
     </div>
 @endsection
