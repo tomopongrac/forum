@@ -12,7 +12,7 @@
                         {{ $thread->body }}
                     </div>
                 </div>
-                @foreach($thread->replies as $reply)
+                @foreach($replies as $reply)
                     <div class="card mb-3">
                         <div class="card-header">
                             <a href="#">{{ $reply->owner->name }}</a> said {{ $reply->created_at->diffForHumans() }}
@@ -22,6 +22,7 @@
                         </div>
                     </div>
                 @endforeach
+                {{ $replies->links() }}
                 @if (auth()->check())
                     <form method="POST"
                           action="{{ route('reply.store', ['channel' => $thread->channel->slug, 'thread' => $thread]) }}">
