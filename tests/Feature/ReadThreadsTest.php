@@ -70,4 +70,21 @@ class ReadThreadsTest extends TestCase
             ->assertSee($threadByJohn->title)
             ->assertDontSee($threadNotByJohn->title);
     }
+
+    /** @test */
+    public function a_user_can_sort_threads_by_popularity()
+    {
+        $user = create(User::class);
+
+        $threadWithTwoReplies = create(Thread::class);
+        create(Reply::class, ['thread_id' => $threadWithTwoReplies->id], 2);
+
+        $threadWithoutReplies = create(Thread::class);
+
+        $threadWithThreeReplies = create(Thread::class);
+        create(Reply::class, ['thread_id' => $threadWithThreeReplies->id], 3);
+
+        $response = $this->get(route('threads.index').'?popular=1');
+        $response->assertSeeInOrder([$threadWithThreeReplies->title, $threadWithTwoReplies->title, $threadWithoutReplies->title]);
+    }
 }
