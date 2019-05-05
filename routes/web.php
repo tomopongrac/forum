@@ -20,5 +20,5 @@ Auth::routes();
 Route::resource('threads', 'ThreadController')->except(['show']);
 Route::get('threads/{channel}', 'ThreadController@index')->name('threads.channel');
 Route::get('threads/{channel}/{thread}', 'ThreadController@show')->name('threads.show');
-
 Route::post('threads/{channel}/{thread}/reply', 'ReplyController@store')->name('reply.store');
+Route::post('replies/{reply}/favorites', 'FavoritesController@store')->name('favorite.reply.store');
