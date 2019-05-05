@@ -16,15 +16,18 @@
 
                         @foreach($threads as $thread)
                             <article>
-                                <h4>
-                                    <a href="{{ route('threads.show', ['channel' => $thread->channel->slug, 'thread' => $thread]) }}">
-                                        {{ $thread->title }}
-                                    </a>
-                                </h4>
+                                <div class="level">
+                                    <h4 class="flex">
+                                        <a href="{{ route('threads.show', ['channel' => $thread->channel->slug, 'thread' => $thread]) }}">
+                                            {{ $thread->title }}
+                                        </a>
+                                    </h4>
+                                    <a href="{{ route('threads.show', ['channel' => $thread->channel->slug, 'thread' => $thread]) }}">{{ $thread->replies_count }} {{ Str::plural('reply', $thread->replies_count) }}</a>
+                                </div>
                                 <div class="body">{{ $thread->body }}</div>
                             </article>
 
-                            <hr />
+                            <hr/>
                         @endforeach
                     </div>
                 </div>
