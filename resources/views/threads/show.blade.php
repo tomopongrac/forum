@@ -6,7 +6,7 @@
             <div class="col-md-8">
                 <div class="card mb-3">
                     <div class="card-header">
-                        <a href="#">{{ $thread->creator->name }}</a> posted:
+                        <a href="{{ route('profiles.show', $thread->creator) }}">{{ $thread->creator->name }}</a> posted:
                         {{ $thread->title }}</div>
                     <div class="card-body">
                         {{ $thread->body }}
@@ -17,7 +17,7 @@
                         <div class="card-header">
                             <div class="level">
                                 <div class="flex">
-                                    <a href="#">{{ $reply->owner->name }}</a>
+                                    <a href="{{ route('profiles.show', $reply->owner) }}">{{ $reply->owner->name }}</a>
                                     said {{ $reply->created_at->diffForHumans() }}
                                 </div>
                                 <div>
@@ -54,7 +54,7 @@
                 <div class="card mb-3">
                     <div class="card-body">
                         This thread was published {{ $thread->created_at->diffForHumans() }} by <a
-                                href="#">{{ $thread->creator->name }}</a>,
+                                href="{{ route('profiles.show', $thread->creator) }}">{{ $thread->creator->name }}</a>,
                         and currently
                         has {{ $thread->replies_count }} {{ \Str::plural('comment', $thread->replies_count)}}.
                     </div>
