@@ -6,8 +6,21 @@
             <div class="col-md-8">
                 <div class="card mb-3">
                     <div class="card-header">
-                        <a href="{{ route('profiles.show', $thread->creator) }}">{{ $thread->creator->name }}</a> posted:
-                        {{ $thread->title }}</div>
+                        <div class="level">
+                            <span class="flex">
+                            <a href="{{ route('profiles.show', $thread->creator) }}">{{ $thread->creator->name }}</a>
+                            posted:
+                            {{ $thread->title }}
+                            </span>
+                            @can ('update', $thread)
+                                <form method="POST" action="{{ route('threads.destroy', $thread) }}">
+                                    @csrf
+                                    {{ method_field('DELETE') }}
+                                    <button type="submit" class="btn btn-link">Delete Thread</button>
+                                </form>
+                            @endcan
+                        </div>
+                    </div>
                     <div class="card-body">
                         {{ $thread->body }}
                     </div>
@@ -23,7 +36,8 @@
                                 <div>
                                     <form method="POST" action="{{ route('favorite.reply.store', $reply) }}">
                                         {{ csrf_field() }}
-                                        <button type="submit" class="btn btn-outline-primary"{{ $reply->isFavorited() ? ' disabled': '' }}>
+                                        <button type="submit"
+                                                class="btn btn-outline-primary"{{ $reply->isFavorited() ? ' disabled': '' }}>
                                             {{ $reply->favorites_count }} {{ Str::plural('Favorite', $reply->favorites_count) }}
                                         </button>
                                     </form>

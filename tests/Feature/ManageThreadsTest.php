@@ -3,13 +3,14 @@
 namespace Tests\Feature;
 
 use App\Channel;
+use App\Reply;
 use App\Thread;
 use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class CreateThreadsTest extends TestCase
+class ManageThreadsTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -69,6 +70,35 @@ class CreateThreadsTest extends TestCase
         $channel = create(Channel::class);
         $this->publishThread(['channel_id' => $channel->id + 1])
             ->assertSessionHasErrors('channel_id');
+    }
+
+    /** @test */
+    public function unauthorized_users_may_not_delete_threads()
+    {
+        $thread = create(Thread::class);
+
+        $this->delete(route('threads.destroy', $thread))
+            ->assertRedirect(route('login'));
+
+        $user = create(User::class);
+        $this->actingAs($user)
+            ->delete(route('threads.destroy', $thread))
+            ->assertStatus(403);
+    }
+
+    /** @test */
+    public function authorized_users_can_delete_threads()
+    {
+        $user = create(User::class);
+        $thread = create(Thread::class, ['user_id' => $user->id]);
+        $reply = create(Reply::class, ['thread_id' => $thread->id]);
+
+        $this->actingAs($user);
+        $response = $this->json('DELETE', route('threads.destroy', $thread));
+
+        $response->assertStatus(204);
+        $this->assertDatabaseMissing('threads', $thread->toArray());
+        $this->assertDatabaseMissing('replies', $reply->toArray());
     }
 
     private function publishThread($overrides = [])
