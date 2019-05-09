@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Activity;
+use App\Reply;
 use App\Thread;
 use App\User;
 use Tests\TestCase;
@@ -32,5 +33,23 @@ class ActivityTest extends TestCase
         $activity = Activity::first();
         
         $this->assertEquals($activity->subject->id, $thread->id);
+    }
+
+    /** @test */
+    public function it_records_activity_when_a_reply_is_createad()
+    {
+        $user = create(User::class);
+
+        $this->actingAs($user);
+        $reply = create(Reply::class);
+
+        $this->assertEquals(2, Activity::count());
+
+        $this->assertDatabaseHas('activities', [
+            'user_id' => auth()->id(),
+            'type' => 'created_reply',
+            'subject_id' => $reply->id,
+            'subject_type' => 'App\Reply',
+        ]);
     }
 }
