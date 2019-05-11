@@ -6,6 +6,7 @@ use App\Activity;
 use App\Reply;
 use App\Thread;
 use App\User;
+use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -31,7 +32,7 @@ class ActivityTest extends TestCase
         ]);
 
         $activity = Activity::first();
-        
+
         $this->assertEquals($activity->subject->id, $thread->id);
     }
 
@@ -51,5 +52,28 @@ class ActivityTest extends TestCase
             'subject_id' => $reply->id,
             'subject_type' => 'App\Reply',
         ]);
+    }
+
+    /** @test */
+    public function it_fetches_a_feed_for_any_user()
+    {
+        $user = create(User::class);
+        $this->actingAs($user);
+
+        create(Thread::class, ['user_id' => $user->id], 2);
+
+        $activityForModify = auth()->user()->activity()->first();
+        $activityForModify->created_at = Carbon::now()->subWeek();
+        $activityForModify->save();
+
+        $feed = Activity::feed($user);
+
+        $this->assertTrue($feed->keys()->contains(
+            Carbon::now()->format('Y-m-d')
+        ));
+
+        $this->assertTrue($feed->keys()->contains(
+            Carbon::now()->subWeek()->format('Y-m-d')
+        ));
     }
 }
