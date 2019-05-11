@@ -27,7 +27,7 @@ class ProfilesTest extends TestCase
     {
         $user = create(User::class);
         $this->actingAs($user);
-        
+
         $thread = create(Thread::class, ['user_id' => $user->id]);
 
         $this->get(route('profiles.show', $user))

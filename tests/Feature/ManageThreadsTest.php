@@ -90,15 +90,18 @@ class ManageThreadsTest extends TestCase
     public function authorized_users_can_delete_threads()
     {
         $user = create(User::class);
+        $this->actingAs($user);
+
         $thread = create(Thread::class, ['user_id' => $user->id]);
         $reply = create(Reply::class, ['thread_id' => $thread->id]);
+        $this->assertEquals(2, $user->activity()->count());
 
-        $this->actingAs($user);
         $response = $this->json('DELETE', route('threads.destroy', $thread));
 
         $response->assertStatus(204);
         $this->assertDatabaseMissing('threads', $thread->toArray());
         $this->assertDatabaseMissing('replies', $reply->toArray());
+        $this->assertEquals(0, $user->activity()->count());
     }
 
     private function publishThread($overrides = [])
