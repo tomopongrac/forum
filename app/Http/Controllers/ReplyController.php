@@ -51,7 +51,8 @@ class ReplyController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        return redirect(route('threads.show', ['channel' => $thread->channel->slug, 'thread' => $thread]));
+        return redirect(route('threads.show', ['channel' => $thread->channel->slug, 'thread' => $thread]))
+            ->with('flash', 'Your reply has been left.');
     }
 
     /**
