@@ -26,6 +26,8 @@ class ProfilesTest extends TestCase
     public function profiles_displays_all_threads_created_by_the_associated_user()
     {
         $user = create(User::class);
+        $this->actingAs($user);
+        
         $thread = create(Thread::class, ['user_id' => $user->id]);
 
         $this->get(route('profiles.show', $user))
