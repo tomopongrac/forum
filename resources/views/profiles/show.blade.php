@@ -8,8 +8,11 @@
                 <small>Since {{ $profileUser->created_at->diffForHumans() }}</small>
             </h1>
         </div>
-        @foreach($activities as $activity)
-            @include("profiles.activities.{$activity->type}")
+        @foreach($activities as $date => $dateActivities)
+            <h2>{{ $date }}</h2>
+            @foreach($dateActivities as $activity)
+                @include("profiles.activities.{$activity->type}")
+            @endforeach
         @endforeach
     </div>
 @endsection
