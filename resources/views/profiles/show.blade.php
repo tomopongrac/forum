@@ -11,7 +11,7 @@
         @foreach($activities as $date => $dateActivities)
             <h2>{{ $date }}</h2>
             @foreach($dateActivities as $activity)
-                @include("profiles.activities.{$activity->type}")
+                @includeIf("profiles.activities.{$activity->type}")
             @endforeach
         @endforeach
     </div>
