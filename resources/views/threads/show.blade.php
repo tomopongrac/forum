@@ -47,6 +47,15 @@
                         <div class="card-body">
                             {{ $reply->body }}
                         </div>
+                        @can('update', $reply)
+                            <div class="card-footer text-muted">
+                                <form method="POST" action="{{ route('reply.destroy', $reply) }}">
+                                    {{ csrf_field() }}
+                                    {{ method_field('DELETE') }}
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </div>
+                        @endcan
                     </div>
                 @endforeach
                 {{ $replies->links() }}
