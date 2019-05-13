@@ -26,37 +26,47 @@
                     </div>
                 </div>
                 @foreach($replies as $reply)
-                    <div id="reply-{{ $reply->id }}"class="card mb-3">
-                        <div class="card-header">
-                            <div class="level">
-                                <div class="flex">
-                                    <a href="{{ route('profiles.show', $reply->owner) }}">{{ $reply->owner->name }}</a>
-                                    said {{ $reply->created_at->diffForHumans() }}
+                    <reply :attributes="{{ $reply }}" inline-template v-cloak>
+                        <div id="reply-{{ $reply->id }}" class="card mb-3">
+                            <div class="card-header">
+                                <div class="level">
+                                    <div class="flex">
+                                        <a href="{{ route('profiles.show', $reply->owner) }}">{{ $reply->owner->name }}</a>
+                                        said {{ $reply->created_at->diffForHumans() }}
+                                    </div>
+                                    <div>
+                                        <form method="POST" action="{{ route('favorite.reply.store', $reply) }}">
+                                            {{ csrf_field() }}
+                                            <button type="submit"
+                                                    class="btn btn-outline-primary"{{ $reply->isFavorited() ? ' disabled': '' }}>
+                                                {{ $reply->favorites_count }} {{ Str::plural('Favorite', $reply->favorites_count) }}
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
-                                <div>
-                                    <form method="POST" action="{{ route('favorite.reply.store', $reply) }}">
+                            </div>
+                            <div class="card-body">
+                                <div v-if="editing">
+                                    <div class="form-group">
+                                        <textarea class="form-control mb-2" placeholder="" v-model="body"></textarea>
+                                        <button class="btn btn-primary btn-sm" @click="update">Update</button>
+                                        <button class="btn btn-link btn-sm" @click="editing = false">Cancel</button>
+                                    </div>
+                                </div>
+                                <div v-else v-text="body"></div>
+                            </div>
+                            @can('update', $reply)
+                                <div class="card-footer text-muted level">
+                                    <button type="submit" class="btn btn-primary btn-sm mr-2" @click="editing = true">Edit</button>
+                                    <form method="POST" action="{{ route('reply.destroy', $reply) }}">
                                         {{ csrf_field() }}
-                                        <button type="submit"
-                                                class="btn btn-outline-primary"{{ $reply->isFavorited() ? ' disabled': '' }}>
-                                            {{ $reply->favorites_count }} {{ Str::plural('Favorite', $reply->favorites_count) }}
-                                        </button>
+                                        {{ method_field('DELETE') }}
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                     </form>
                                 </div>
-                            </div>
+                            @endcan
                         </div>
-                        <div class="card-body">
-                            {{ $reply->body }}
-                        </div>
-                        @can('update', $reply)
-                            <div class="card-footer text-muted">
-                                <form method="POST" action="{{ route('reply.destroy', $reply) }}">
-                                    {{ csrf_field() }}
-                                    {{ method_field('DELETE') }}
-                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                </form>
-                            </div>
-                        @endcan
-                    </div>
+                    </reply>
                 @endforeach
                 {{ $replies->links() }}
                 @if (auth()->check())
