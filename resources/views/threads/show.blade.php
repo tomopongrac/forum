@@ -58,11 +58,7 @@
                             @can('update', $reply)
                                 <div class="card-footer text-muted level">
                                     <button type="submit" class="btn btn-primary btn-sm mr-2" @click="editing = true">Edit</button>
-                                    <form method="POST" action="{{ route('reply.destroy', $reply) }}">
-                                        {{ csrf_field() }}
-                                        {{ method_field('DELETE') }}
-                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                    </form>
+                                    <button type="submit" class="btn btn-danger btn-sm" @click="destroy">Delete</button>
                                 </div>
                             @endcan
                         </div>
