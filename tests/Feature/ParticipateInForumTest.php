@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Activity;
 use App\Channel;
 use App\Reply;
 use App\Thread;
@@ -77,6 +78,21 @@ class ParticipateInForumTest extends TestCase
         $this->actingAs($user)
             ->delete(route('reply.destroy', $reply));
 
+        $this->assertEquals(0, Activity::count());
+        $this->assertDatabaseMissing('replies', $reply->toArray());
+    }
+
+    /** @test */
+    public function authorized_users_can_delete_replies_which_is_favorited_and_than_activity_is_also_deleted()
+    {
+        $user = create(User::class);
+        $reply = create(Reply::class, ['user_id' => $user->id]);
+
+        $this->actingAs($user);
+        $reply->favorite();
+        $this->delete(route('reply.destroy', $reply));
+
+        $this->assertEquals(0, Activity::count());
         $this->assertDatabaseMissing('replies', $reply->toArray());
     }
 
