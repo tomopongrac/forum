@@ -34,9 +34,11 @@
                                         <a href="{{ route('profiles.show', $reply->owner) }}">{{ $reply->owner->name }}</a>
                                         said {{ $reply->created_at->diffForHumans() }}
                                     </div>
-                                    <div>
-                                        <favorite :reply="{{ $reply }}"> </favorite>
-                                    </div>
+                                    @if (auth()->check())
+                                        <div>
+                                            <favorite :reply="{{ $reply }}"></favorite>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                             <div class="card-body">
