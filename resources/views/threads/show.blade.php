@@ -35,13 +35,7 @@
                                         said {{ $reply->created_at->diffForHumans() }}
                                     </div>
                                     <div>
-                                        <form method="POST" action="{{ route('favorite.reply.store', $reply) }}">
-                                            {{ csrf_field() }}
-                                            <button type="submit"
-                                                    class="btn btn-outline-primary"{{ $reply->isFavorited() ? ' disabled': '' }}>
-                                                {{ $reply->favorites_count }} {{ Str::plural('Favorite', $reply->favorites_count) }}
-                                            </button>
-                                        </form>
+                                        <favorite :reply="{{ $reply }}"> </favorite>
                                     </div>
                                 </div>
                             </div>

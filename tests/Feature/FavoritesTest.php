@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Activity;
 use App\Reply;
 use App\User;
 use Tests\TestCase;
@@ -31,6 +32,24 @@ class FavoritesTest extends TestCase
     }
 
     /** @test */
+    public function an_authenticated_user_can_unfavorite_any_reply()
+    {
+        $user = create(User::class);
+        $reply = create(Reply::class);
+
+        $this->actingAs($user);
+
+        $reply->favorite();
+
+        $this->assertCount(1, $reply->favorites);
+
+        $this->delete(route('favorite.reply.destroy', ['reply' => $reply->id]));
+
+        $this->assertEquals(0, Activity::count());
+        $this->assertCount(0, $reply->fresh()->favorites);
+    }
+
+    /** @test */
     public function an_authenticated_user_may_only_favorite_a_reply_once()
     {
         $this->withoutExceptionHandling();
@@ -45,7 +64,6 @@ class FavoritesTest extends TestCase
         } catch (\Exception $e) {
             $this->fail('Did not except to insert the same record twice.');
         }
-
 
         $this->assertCount(1, $reply->favorites);
     }
