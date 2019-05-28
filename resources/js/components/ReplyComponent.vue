@@ -21,12 +21,10 @@
             </div>
             <div v-else v-text="body"></div>
         </div>
-<!--        @can('update', $reply)-->
-        <div class="card-footer text-muted level">
+        <div class="card-footer text-muted level" v-if="canUpdate">
             <button type="submit" class="btn btn-primary btn-sm mr-2" @click="editing = true">Edit</button>
             <button type="submit" class="btn btn-danger btn-sm" @click="destroy">Delete</button>
         </div>
-<!--        @endcan-->
     </div>
 </template>
 <script>
@@ -48,6 +46,13 @@
         computed: {
             signIn() {
                 return window.App.signIn;
+            },
+            canUpdate() {
+                if (window.App.user === null) {
+                    return false;
+                }
+
+                return this.data.user_id == window.App.user.id;
             }
         },
 
