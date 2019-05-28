@@ -48,11 +48,7 @@
                 return window.App.signIn;
             },
             canUpdate() {
-                if (window.App.user === null) {
-                    return false;
-                }
-
-                return this.data.user_id == window.App.user.id;
+                return this.authorize(user => this.data.user_id == user.id);
             }
         },
 

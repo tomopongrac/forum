@@ -8,6 +8,14 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+window.Vue.prototype.authorize = function (handler) {
+    if (window.App.user === null) {
+        return false;
+    }
+
+    return handler(window.App.user);
+}
+
 window.events = new Vue();
 
 window.flash = function (message) {
