@@ -10,6 +10,11 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
+    <script>
+        window.App = {!! json_encode([
+            'signIn' => Auth::check()
+        ]) !!};
+    </script>
     <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!-- Fonts -->
@@ -17,17 +22,30 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
 
 
-
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
-    <script defer src="https://use.fontawesome.com/releases/v5.8.2/js/all.js" integrity="sha384-DJ25uNYET2XCl5ZF++U8eNxPWqcKohUUBUpKGlNLMchM7q4Wjg2CUpjHLaL8yYPH" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.8.2/js/all.js"
+            integrity="sha384-DJ25uNYET2XCl5ZF++U8eNxPWqcKohUUBUpKGlNLMchM7q4Wjg2CUpjHLaL8yYPH"
+            crossorigin="anonymous"></script>
 
     <style>
-        body { padding-bottom: 100px; }
-        .level { display: flex; align-items: center; }
-        .flex { flex: 1; }
-        [v-cloak] { display: none; }
+        body {
+            padding-bottom: 100px;
+        }
+
+        .level {
+            display: flex;
+            align-items: center;
+        }
+
+        .flex {
+            flex: 1;
+        }
+
+        [v-cloak] {
+            display: none;
+        }
     </style>
 </head>
 <body>
