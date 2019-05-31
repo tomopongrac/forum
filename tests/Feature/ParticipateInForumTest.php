@@ -78,7 +78,7 @@ class ParticipateInForumTest extends TestCase
             ->delete(route('reply.destroy', $reply));
 
         $this->assertEquals(0, Activity::count());
-        $this->assertDatabaseMissing('replies', $reply->toArray());
+        $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
     }
 
     /** @test */
@@ -92,7 +92,7 @@ class ParticipateInForumTest extends TestCase
         $this->delete(route('reply.destroy', $reply));
 
         $this->assertEquals(0, Activity::count());
-        $this->assertDatabaseMissing('replies', $reply->toArray());
+        $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
     }
 
     /** @test */

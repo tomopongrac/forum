@@ -99,8 +99,8 @@ class ManageThreadsTest extends TestCase
         $response = $this->json('DELETE', route('threads.destroy', $thread));
 
         $response->assertStatus(204);
-        $this->assertDatabaseMissing('threads', $thread->toArray());
-        $this->assertDatabaseMissing('replies', $reply->toArray());
+        $this->assertDatabaseMissing('threads', ['id' => $thread->id]);
+        $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
         $this->assertEquals(0, $user->activity()->count());
     }
 
