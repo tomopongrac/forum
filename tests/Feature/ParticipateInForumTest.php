@@ -37,6 +37,7 @@ class ParticipateInForumTest extends TestCase
         ]);
 
         $this->assertDatabaseHas('replies', ['body' => 'New reply']);
+        $this->assertEquals(1, $thread->fresh()->replies_count);
     }
 
     /** @test */
@@ -79,6 +80,7 @@ class ParticipateInForumTest extends TestCase
 
         $this->assertEquals(0, Activity::count());
         $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+        $this->assertEquals(0, $reply->thread->fresh()->replies_count);
     }
 
     /** @test */

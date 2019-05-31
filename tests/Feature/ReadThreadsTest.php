@@ -73,7 +73,21 @@ class ReadThreadsTest extends TestCase
         create(Reply::class, ['thread_id' => $threadWithThreeReplies->id], 3);
 
         $response = $this->get(route('threads.index').'?popular=1');
-        $response->assertSeeInOrder([$threadWithThreeReplies->title, $threadWithTwoReplies->title, $threadWithoutReplies->title]);
+        $response->assertSeeInOrder([
+            $threadWithThreeReplies->title, $threadWithTwoReplies->title, $threadWithoutReplies->title,
+        ]);
+    }
+
+    /** @test */
+    public function a_user_can_filter_threads_by_those_that_are_unanswered()
+    {
+        $threadWithoutReply = create(Thread::class);
+        $threadWithReply = create(Thread::class);
+        $reply = create(Reply::class, ['thread_id' => $threadWithReply->id]);
+
+        $this->get(route('threads.index').'?unanswered=1')
+            ->assertSee($threadWithoutReply->title)
+            ->assertDontSee($threadWithReply->title);
     }
 
     /** @test */
