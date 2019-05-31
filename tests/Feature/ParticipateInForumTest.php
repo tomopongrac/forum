@@ -36,8 +36,7 @@ class ParticipateInForumTest extends TestCase
             'body' => 'New reply',
         ]);
 
-        $this->get(route('threads.show', ['channel' => $channel->slug, 'thread' => $thread]))
-            ->assertSee('New reply');
+        $this->assertDatabaseHas('replies', ['body' => 'New reply']);
     }
 
     /** @test */
