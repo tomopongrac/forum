@@ -87,4 +87,17 @@ class ReadThreadsTest extends TestCase
         $response = $this->get(route('threads.index').'?popular=1');
         $response->assertSeeInOrder([$threadWithThreeReplies->title, $threadWithTwoReplies->title, $threadWithoutReplies->title]);
     }
+
+    /** @test */
+    public function a_user_can_request_all_replies_for_a_given_thread()
+    {
+        $thread = create(Thread::class);
+        $reply = create(Reply::class, ['thread_id' => $thread->id], 2);
+
+        $response = $this->getJson(route('reply.index', ['channel' => $thread->channel->slug, 'thread' => $thread]))
+            ->json();
+
+        $this->assertCount(1, $response['data']);
+        $this->assertEquals(2, $response['total']);
+    }
 }
