@@ -21,7 +21,7 @@
         data() {
             return {
                 dataSet: false,
-                endpoint: location.pathname + '/reply'
+                endpoint: location.pathname + '/replies'
             };
         },
 
