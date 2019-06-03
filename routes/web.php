@@ -31,3 +31,4 @@ Route::post('threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptionsCont
 Route::delete('threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptionsController@destroy')->name('thread.subscription.store')->middleware('auth');
 
 Route::get('profiles/{user}', 'ProfilesController@show')->name('profiles.show');
+Route::delete('profiles/{user}/notifications/{notification}', 'UserNotificationsController@destroy')->name('user.notifications.destroy');

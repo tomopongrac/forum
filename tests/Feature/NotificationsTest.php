@@ -13,7 +13,8 @@ class NotificationsTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function a_notification_is_prepared_when_a_subscribed_thread_receives_a_new_reply_that_is_not_by_current_user()
+    public function a_notification_is_prepared_when_a_subscribed_thread_receives_a_new_reply_that_is_not_by_current_user(
+    )
     {
         $user = create(User::class);
 
@@ -35,5 +36,30 @@ class NotificationsTest extends TestCase
         ]);
 
         $this->assertCount(1, auth()->user()->fresh()->notifications);
+    }
+
+    /** @test */
+    public function a_user_can_mark_a_notification_as_read()
+    {
+        $user = create(User::class);
+
+        $this->be($user);
+        $thread = create(Thread::class)->subscribe();
+
+        $thread->addReply([
+            'user_id' => create(User::class)->id,
+            'body' => 'Some reply body',
+        ]);
+
+        $user = auth()->user();
+
+        $this->assertCount(1, $user->unreadNotifications);
+
+        $notificationId = $user->unreadNotifications->first()->id;
+
+        $this->delete(route('user.notifications.destroy',
+            ['user' => $user->name, 'notification' => $notificationId]));
+
+        $this->assertCount(0, $user->fresh()->unreadNotifications);
     }
 }
