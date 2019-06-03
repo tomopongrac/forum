@@ -33,10 +33,15 @@
                 <div class="col-md-4">
                     <div class="card mb-3">
                         <div class="card-body">
+                            <p>
                             This thread was published {{ $thread->created_at->diffForHumans() }} by <a
                                     href="{{ route('profiles.show', $thread->creator) }}">{{ $thread->creator->name }}</a>,
                             and currently
                             has <span v-text="repliesCount"></span> {{ \Str::plural('comment', $thread->replies_count)}}.
+                            </p>
+                            <p>
+                                <subscribe-button :active="{{ $thread->isSubscribedTo ? 'true' : 'false' }}"></subscribe-button>
+                            </p>
                         </div>
                     </div>
                 </div>
