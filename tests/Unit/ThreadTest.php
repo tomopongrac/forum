@@ -2,10 +2,13 @@
 
 namespace Tests\Unit;
 
+use App\Notifications\ThreadWasUpdated;
 use App\Thread;
 use App\User;
 use App\Channel;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -21,7 +24,7 @@ class ThreadTest extends TestCase
 
         $this->assertInstanceOf(User::class, $thread->creator);
     }
-    
+
     /** @test */
     public function a_thread_has_replies()
     {
@@ -44,6 +47,24 @@ class ThreadTest extends TestCase
     }
 
     /** @test */
+    public function a_thread_notifies_all_registered_subscribers_when_a_reply_is_added()
+    {
+        Notification::fake();
+
+        $thread = factory(Thread::class)->create();
+        $user = create(User::class);
+
+        $this->be($user);
+        $thread->subscribe();
+        $thread->addReply([
+            'body' => 'Some body',
+            'user_id' => 999,
+        ]);
+
+        Notification::assertSentTo(auth()->user(), ThreadWasUpdated::class);
+    }
+
+    /** @test */
     public function a_thread_belongs_to_channel()
     {
         $thread = create(Thread::class);
@@ -58,7 +79,7 @@ class ThreadTest extends TestCase
 
         $thread->subscribe($userId = 1);
 
-       $this->assertEquals(1, $thread->subscriptions()->where('user_id', $userId)->count());
+        $this->assertEquals(1, $thread->subscriptions()->where('user_id', $userId)->count());
     }
 
     /** @test */
@@ -85,5 +106,20 @@ class ThreadTest extends TestCase
         $thread->subscribe();
 
         $this->assertTrue($thread->isSubscribedTo);
+    }
+
+    /** @test */
+    public function a_thread_can_check_if_authenticated_user_has_read_all_replies()
+    {
+        $thread = create(Thread::class);
+        $user = create(User::class);
+
+        $this->be($user);
+
+        $this->assertTrue($thread->hasUpdatesFor($user));
+
+        $user->read($thread);
+
+        $this->assertFalse($thread->hasUpdatesFor($user));
     }
 }

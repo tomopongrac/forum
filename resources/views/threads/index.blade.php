@@ -13,7 +13,11 @@
                             <div class="level">
                                 <h4 class="flex">
                                     <a href="{{ route('threads.show', ['channel' => $thread->channel->slug, 'thread' => $thread]) }}">
-                                        {{ $thread->title }}
+                                        @if (auth()->check() && $thread->hasUpdatesFor(auth()->user()))
+                                            <strong>{{ $thread->title }}</strong>
+                                        @else
+                                            {{ $thread->title }}
+                                        @endif
                                     </a>
                                 </h4>
                                 <a href="{{ route('threads.show', ['channel' => $thread->channel->slug, 'thread' => $thread]) }}">{{ $thread->replies_count }} {{ Str::plural('reply', $thread->replies_count) }}</a>

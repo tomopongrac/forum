@@ -91,4 +91,11 @@ class Thread extends Model
                 $subscription->notify($reply);
             });
     }
+
+    public function hasUpdatesFor($user = null)
+    {
+        $user = $user ?: auth()->user();
+
+        return $this->updated_at > cache($user->visitedThreadCacheKey($this));
+    }
 }
