@@ -16,27 +16,30 @@
 <script>
     export default {
         props: ['endpoint'],
-        data () {
+        data() {
             return {
                 body: '',
-            }
+            };
         },
         computed: {
-            signIn () {
+            signIn() {
                 return window.App.signIn;
             }
         },
         methods: {
-            addReply () {
+            addReply() {
                 axios.post(this.endpoint, { body: this.body })
                     .then(response => {
-                        this.body = ''
+                        this.body = '';
 
-                        flash('Your reply has been posted.')
+                        flash('Your reply has been posted.');
 
-                        this.$emit('created', response.data)
+                        this.$emit('created', response.data);
                     })
+                    .catch(error => {
+                        flash(error.response.data, 'danger');
+                    });
             }
         }
-    }
+    };
 </script>
