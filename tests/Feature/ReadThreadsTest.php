@@ -38,11 +38,12 @@ class ReadThreadsTest extends TestCase
     public function a_user_can_filter_threads_according_to_a_channel()
     {
         $this->withoutExceptionHandling();
-        $channel = create(Channel::class);
-        $threadInChannel = create(Thread::class, ['channel_id' => $channel->id]);
-        $threadNotInChannel = create(Thread::class);
+        $channelOne = create(Channel::class, ['slug' => 'channel-slug']);
+        $channelTwo = create(Channel::class, ['slug' => 'channel-slug-other']);
+        $threadInChannel = create(Thread::class, ['channel_id' => $channelOne->id]);
+        $threadNotInChannel = create(Thread::class, ['channel_id' => $channelTwo->id]);
 
-        $this->get(route('threads.channel', ['channel' => $channel->slug]))
+        $this->get(route('threads.channel', ['channel' => $channelOne->slug]))
             ->assertSee($threadInChannel->title)
             ->assertDontSee($threadNotInChannel->title);
     }
