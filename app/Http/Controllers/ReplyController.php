@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Channel;
 use App\Reply;
-use App\Inspections\Spam;
+use App\Rules\SpamFree;
 use App\Thread;
+use Exception;
 use Illuminate\Http\Request;
 
 class ReplyController extends Controller
@@ -41,18 +42,18 @@ class ReplyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Channel $channel, Thread $thread, Spam $spam)
+    public function store(Request $request, Channel $channel, Thread $thread)
     {
         try {
             $this->validate($request, [
-                'body' => 'required',
+                'body' => ['required', new SpamFree],
             ]);
-            $spam->detect($request->input('body'));
+
             $reply = $thread->addReply([
                 'body' => $request->input('body'),
                 'user_id' => auth()->id(),
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response('Sorry, your reply could not be saved at this time.', 422);
         }
 
@@ -93,18 +94,17 @@ class ReplyController extends Controller
      * @param  \App\Reply  $reply
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Reply $reply, Spam $spam)
+    public function update(Request $request, Reply $reply)
     {
         $this->authorize('update', $reply);
 
         try {
             $this->validate($request, [
-                'body' => 'required',
+                'body' => ['required', new SpamFree],
             ]);
-            $spam->detect($request->input('body'));
 
             $reply->update(['body' => request('body')]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response('Sorry, your reply could not be saved at this time.', 422);
         }
 
