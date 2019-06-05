@@ -19,7 +19,7 @@ class ProfilesTest extends TestCase
         $user = create(User::class);
 
         $this->get(route('profiles.show', $user))
-            ->assertSee($user->name);
+            ->assertSee(htmlentities($user->name, ENT_QUOTES));
     }
 
     /** @test */
