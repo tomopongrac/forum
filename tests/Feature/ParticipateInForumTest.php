@@ -139,4 +139,21 @@ class ParticipateInForumTest extends TestCase
             'body' => 'Yahoo Customer Support',
         ])->assertStatus(422);
     }
+
+    /** @test */
+    public function users_may_only_reply_a_maximum_of_once_per_minute()
+    {
+        $user = create(User::class);
+        $thread = create(Thread::class);
+        $reply = make(Reply::class, [
+            'body' => 'My simple reply',
+        ]);
+
+        $this->be($user);
+        $this->post(route('reply.store', ['channel' => $thread->channel->slug, 'thread' => $thread->id]),
+            $reply->toArray())->assertStatus(302);
+
+        $this->post(route('reply.store', ['channel' => $thread->channel->slug, 'thread' => $thread->id]),
+            $reply->toArray())->assertStatus(429);
+    }
 }
