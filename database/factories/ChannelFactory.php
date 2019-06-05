@@ -6,7 +6,7 @@ use App\Channel;
 use Faker\Generator as Faker;
 
 $factory->define(Channel::class, function (Faker $faker) {
-    $name = $faker->word;
+    $name = $faker->word.time();
 
     return [
         'name' => $name,
