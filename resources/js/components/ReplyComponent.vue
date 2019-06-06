@@ -13,8 +13,6 @@
         </div>
         <div class="card-body">
             <div v-if="editing">
-                <div class="form-group">
-                    <textarea class="form-control mb-2" placeholder="" v-model="body"></textarea>
                     <button class="btn btn-primary btn-sm" @click="update">Update</button>
                     <button class="btn btn-link btn-sm" @click="editing = false">Cancel</button>
                 </div>
