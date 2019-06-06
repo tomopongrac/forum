@@ -13,11 +13,15 @@
         </div>
         <div class="card-body">
             <div v-if="editing">
-                    <button class="btn btn-primary btn-sm" @click="update">Update</button>
-                    <button class="btn btn-link btn-sm" @click="editing = false">Cancel</button>
-                </div>
+                <form @submit.prevent="update">
+                    <div class="form-group">
+                        <textarea class="form-control mb-2" placeholder="" v-model="body" required></textarea>
+                        <button class="btn btn-primary btn-sm">Update</button>
+                        <button class="btn btn-link btn-sm" @click="editing = false">Cancel</button>
+                    </div>
+                </form>
             </div>
-            <div v-else v-text="body"></div>
+            <div v-else v-html="body"></div>
         </div>
         <div class="card-footer text-muted level" v-if="canUpdate">
             <button type="submit" class="btn btn-primary btn-sm mr-2" @click="editing = true">Edit</button>
@@ -73,5 +77,5 @@
                 this.$emit('deleted', this.data.id);
             }
         }
-    }
+    };
 </script>
