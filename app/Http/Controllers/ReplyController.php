@@ -53,17 +53,6 @@ class ReplyController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        preg_match_all('/\@([^\s\.]+)/', $reply->body, $matches);
-
-        collect($matches[1])
-            ->map(function ($name) {
-                return User::whereName($name)->first();
-            })
-            ->filter()
-            ->each(function ($user) use ($reply) {
-                $user->notify(new YouWereMentioned($reply));
-            });
-
         if (request()->expectsJson()) {
             return $reply->load('owner');
         }
