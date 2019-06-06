@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Channel;
 use App\Http\Requests\CreatePostRequest;
+use App\Notifications\YouWereMentioned;
 use App\Reply;
 use App\Rules\SpamFree;
 use App\Thread;
+use App\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -50,6 +52,17 @@ class ReplyController extends Controller
             'body' => request('body'),
             'user_id' => auth()->id(),
         ]);
+
+        preg_match_all('/\@([^\s\.]+)/', $reply->body, $matches);
+
+        collect($matches[1])
+            ->map(function ($name) {
+                return User::whereName($name)->first();
+            })
+            ->filter()
+            ->each(function ($user) use ($reply) {
+                $user->notify(new YouWereMentioned($reply));
+            });
 
         if (request()->expectsJson()) {
             return $reply->load('owner');
