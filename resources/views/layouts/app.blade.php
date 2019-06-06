@@ -48,6 +48,8 @@
             display: none;
         }
     </style>
+
+    @yield('header')
 </head>
 <body>
 <div id="app">
