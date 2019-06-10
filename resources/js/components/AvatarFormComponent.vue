@@ -1,24 +1,26 @@
 <template>
     <div>
-        <h1>
-            <span v-text="user.name"></span>
-            <small>Since <span v-text="ago"></span></small>
-        </h1>
+        <div class="level mb-2">
+            <img :src="avatar" alt="" width="50" height="50" class="mr-2">
+            <h1>
+                <span v-text="user.name"></span>
+                <small>Since <span v-text="ago"></span></small>
+            </h1>
+        </div>
         <form v-if="canUpdate" method="POST" enctype="multipart/form-data">
-            <div class="custom-file mb-2">
-                <input type="file" class="custom-file-input" id="customFile" name="avatar" accept="image/*" @change="onChange">
-                <label class="custom-file-label" for="customFile">Choose file</label>
-            </div>
+            <image-upload @loaded="onLoad"></image-upload>
         </form>
-        <img :src="avatar" alt="" width="50" height="50">
     </div>
 </template>
 
 <script>
+    import ImageUpload from './ImageUploadComponent.vue';
     import moment from 'moment';
 
     export default {
         props: ['user'],
+
+        components: { ImageUpload },
 
         data() {
             return {
@@ -36,18 +38,9 @@
         },
 
         methods: {
-            onChange(e) {
-                if (! e.target.files.length) return;
-
-                let file = e.target.files[0];
-
-                let reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = e => {
-                    this.avatar = e.target.result;
-                };
-
-                this.persist(file);
+            onLoad(data) {
+                this.avatar = data.src;
+                this.persist(data.file);
             },
 
             persist(file) {
