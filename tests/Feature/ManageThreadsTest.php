@@ -25,6 +25,20 @@ class ManageThreadsTest extends TestCase
     }
 
     /** @test */
+    public function authenticated_users_must_first_confirm_their_email_address_before_creating_threads()
+    {
+        $this->withExceptionHandling();
+        $user = create(User::class, ['email_verified_at' => null]);
+
+        $thread = make(Thread::class);
+
+        $this->actingAs($user)
+            ->post(route('threads.store'), $thread->toArray())
+            ->assertRedirect(route('threads.index'))
+            ->assertSessionHas('flash');
+    }
+
+    /** @test */
     public function an_authenticated_user_can_create_new_forum_threads()
     {
         $this->withoutExceptionHandling();
