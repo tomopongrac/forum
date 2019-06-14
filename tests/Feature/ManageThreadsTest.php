@@ -34,8 +34,7 @@ class ManageThreadsTest extends TestCase
 
         $this->actingAs($user)
             ->post(route('threads.store'), $thread->toArray())
-            ->assertRedirect(route('threads.index'))
-            ->assertSessionHas('flash');
+            ->assertRedirect('email/verify');
     }
 
     /** @test */

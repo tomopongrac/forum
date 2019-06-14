@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
 
@@ -66,11 +66,6 @@ class User extends Authenticatable
     public function read($thread)
     {
         cache()->forever($this->visitedThreadCacheKey($thread), Carbon::now());
-    }
-
-    public function getConfirmedAttribute()
-    {
-        return !!$this->email_verified_at;
     }
 
     public function getAvatarPathAttribute($avatar)

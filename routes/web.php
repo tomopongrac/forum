@@ -15,10 +15,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 Route::resource('threads', 'ThreadController')->except(['show, store']);
-Route::post('threads', 'ThreadController@store')->name('threads.store')->middleware('must-be-confirmed');
+Route::post('threads', 'ThreadController@store')->name('threads.store')->middleware('verified');
 Route::get('threads/{channel}', 'ThreadController@index')->name('threads.channel');
 Route::get('threads/{channel}/{thread}', 'ThreadController@show')->name('threads.show');
 Route::post('threads/{channel}/{thread}/replies', 'ReplyController@store')->name('reply.store');
