@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class Thread extends Model
 {
-    use RecordsActivity, RecordsVisits;
+    use RecordsActivity;
 
     protected $with = ['creator', 'channel'];
 
@@ -86,5 +86,10 @@ class Thread extends Model
         $user = $user ?: auth()->user();
 
         return $this->updated_at > cache($user->visitedThreadCacheKey($this));
+    }
+
+    public function visits()
+    {
+        return new Visits($this);
     }
 }
