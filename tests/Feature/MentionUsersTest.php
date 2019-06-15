@@ -24,7 +24,7 @@ class MentionUsersTest extends TestCase
         ]);
 
         $this->be($john);
-        $this->json('post', route('reply.store', ['channel' => $thread->channel->slug, 'thread' => $thread->id]),
+        $this->json('post', route('reply.store', ['channel' => $thread->channel->slug, 'thread' => $thread->slug]),
             $reply->toArray());
 
         $this->assertCount(1, $jane->notifications);

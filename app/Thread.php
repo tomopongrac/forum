@@ -31,6 +31,11 @@ class Thread extends Model
         return $this->hasMany(Reply::class);
     }
 
+    public function path()
+    {
+        return "/threads/{$this->channel->slug}/{$this->slug}";
+    }
+
     public function creator()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -91,5 +96,10 @@ class Thread extends Model
     public function visits()
     {
         return new Visits($this);
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }

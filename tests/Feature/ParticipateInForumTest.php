@@ -32,7 +32,7 @@ class ParticipateInForumTest extends TestCase
         $thread = create(Thread::class, ['channel_id' => $channel->id]);
 
         $this->be($user);
-        $this->post(route('reply.store', ['channel' => $channel->slug, 'thread' => $thread->id]), [
+        $this->post(route('reply.store', ['channel' => $channel->slug, 'thread' => $thread->slug]), [
             'body' => 'New reply',
         ]);
 
@@ -50,7 +50,7 @@ class ParticipateInForumTest extends TestCase
         $reply = make(Reply::class, ['body' => null]);
 
         $response = $this->actingAs(create(User::class))
-            ->json('post', route('reply.store', ['channel' => $channel->slug, 'thread' => $thread->id]), $reply->toArray())
+            ->json('post', route('reply.store', ['channel' => $channel->slug, 'thread' => $thread->slug]), $reply->toArray())
             ->assertStatus(422);
     }
 
@@ -133,7 +133,7 @@ class ParticipateInForumTest extends TestCase
         $thread = create(Thread::class);
 
         $this->be($user);
-        $this->json('post', route('reply.store', ['channel' => $thread->channel->slug, 'thread' => $thread->id]), [
+        $this->json('post', route('reply.store', ['channel' => $thread->channel->slug, 'thread' => $thread->slug]), [
             'body' => 'Yahoo Customer Support',
         ])->assertStatus(422);
     }
@@ -148,10 +148,10 @@ class ParticipateInForumTest extends TestCase
         ]);
 
         $this->be($user);
-        $this->post(route('reply.store', ['channel' => $thread->channel->slug, 'thread' => $thread->id]),
+        $this->post(route('reply.store', ['channel' => $thread->channel->slug, 'thread' => $thread->slug]),
             $reply->toArray())->assertStatus(302);
 
-        $this->post(route('reply.store', ['channel' => $thread->channel->slug, 'thread' => $thread->id]),
+        $this->post(route('reply.store', ['channel' => $thread->channel->slug, 'thread' => $thread->slug]),
             $reply->toArray())->assertStatus(429);
     }
 }

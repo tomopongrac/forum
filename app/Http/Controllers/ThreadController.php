@@ -11,6 +11,7 @@ use App\Trending;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Str;
 
 class ThreadController extends Controller
 {
@@ -64,6 +65,7 @@ class ThreadController extends Controller
         $thread->user_id = auth()->id();
         $thread->channel_id = $request->input('channel_id');
         $thread->title = $request->input('title');
+        $thread->slug = Str::slug($request->input('title'));
         $thread->body = $request->input('body');
         $thread->save();
 

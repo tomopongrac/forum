@@ -53,9 +53,9 @@ class ManageThreadsTest extends TestCase
         $this->actingAs($user)
             ->post(route('threads.store'), $thread->toArray());
 
-        $threadId = Thread::where('title', $thread->title)->where('body', $thread->body)->first()->id;
+        $threadSlug = Thread::where('title', $thread->title)->where('body', $thread->body)->first()->slug;
 
-        $this->get(route('threads.show', ['channel' => $channel->slug, 'thread' => $threadId]))
+        $this->get(route('threads.show', ['channel' => $channel->slug, 'thread' => $threadSlug]))
             ->assertSee($thread->title)
             ->assertSee($thread->body);
     }
