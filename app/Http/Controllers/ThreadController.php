@@ -65,7 +65,7 @@ class ThreadController extends Controller
         $thread->user_id = auth()->id();
         $thread->channel_id = $request->input('channel_id');
         $thread->title = $request->input('title');
-        $thread->slug = Str::slug($request->input('title'));
+        $thread->slug = $request->input('title');
         $thread->body = $request->input('body');
         $thread->save();
 
