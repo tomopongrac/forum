@@ -23,12 +23,12 @@
             </div>
             <div v-else v-html="body"></div>
         </div>
-        <div class="card-footer text-muted level">
+        <div class="card-footer text-muted level" v-if="authorize('updateReply', reply) || authorize('updateThread', reply.thread)">
             <div v-if="authorize('updateReply', reply)">
                 <button type="submit" class="btn btn-primary btn-sm mr-2" @click="editing = true">Edit</button>
                 <button type="submit" class="btn btn-danger btn-sm" @click="destroy">Delete</button>
             </div>
-            <button type="submit" class="btn btn-info btn-sm ml-auto" @click="markBestReply" v-show="!isBest">Best
+            <button type="submit" class="btn btn-info btn-sm ml-auto" @click="markBestReply" v-if="authorize('updateThread', reply.thread)">Best
                 Reply?
             </button>
         </div>
