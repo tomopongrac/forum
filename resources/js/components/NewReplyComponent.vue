@@ -24,11 +24,6 @@
                 body: '',
             };
         },
-        computed: {
-            signIn() {
-                return window.App.signIn;
-            }
-        },
         mounted() {
             $('#body').atwho({
                 at: '@',
