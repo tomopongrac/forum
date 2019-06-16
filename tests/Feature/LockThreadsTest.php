@@ -12,6 +12,34 @@ class LockThreadsTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
+    public function non_administrators_may_not_locked_threads()
+    {
+        $user = create(User::class);
+        $thread = create(Thread::class, ['user_id' => $user->id]);
+
+        $this->actingAs($user);
+        $this->patch($thread->path(), [
+            'locked' => true,
+        ])->assertStatus(403);
+
+        $this->assertFalse(!!$thread->fresh()->locked);
+    }
+
+    /** @test */
+    public function administrators_may_lock_threads()
+    {
+        $user = factory(User::class)->states('administratorj')->create();
+        $thread = create(Thread::class, ['user_id' => $user->id]);
+
+        $this->actingAs($user);
+        $this->patch($thread->path(), [
+            'locked' => true,
+        ]);
+
+        $this->assertTrue(!!$thread->fresh()->locked, 'Failed asserting that the thread is locked.');
+    }
+
+    /** @test */
     public function once_locked_a_thread_may_not_receive_new_replies()
     {
         $thread = create(Thread::class);
