@@ -9,14 +9,15 @@ $factory->define(Thread::class, function (Faker $faker) {
     $title = $faker->sentence;
 
     return [
-        'user_id' => function() {
+        'user_id' => function () {
             return factory(\App\User::class)->create()->id;
         },
-        'channel_id' => function() {
+        'channel_id' => function () {
             return factory(\App\Channel::class)->create()->id;
         },
         'title' => $title,
         'slug' => Str::slug($title),
-        'body' => $faker->paragraph
+        'body' => $faker->paragraph,
+        'locked' => false,
     ];
 });
