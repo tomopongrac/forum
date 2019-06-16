@@ -88,21 +88,34 @@ class ManageThreadsTest extends TestCase
     /** @test */
     public function a_thread_requires_a_unique_slug()
     {
-        $this->withoutExceptionHandling();
+        $this->withExceptionHandling();
         $user = create(User::class);
 
-        $thread = create(Thread::class, ['title' => 'Foo Title', 'slug' => 'foo-title']);
+        create(Thread::class, [], 2);
+
+        $thread = create(Thread::class, ['title' => 'Foo Title']);
 
         $this->assertEquals($thread->fresh()->slug, 'foo-title');
 
-        $this->actingAs($user)
-            ->post(route('threads.store'), $thread->toArray());
+        $this->actingAs($user);
+        $thread = $this->postJson(route('threads.store'), $thread->toArray())->json();
 
-        $this->assertTrue(Thread::whereSlug('foo-title-2')->exists());
+        $this->assertEquals("foo-title-{$thread['id']}", $thread['slug']);
+    }
 
-        $this->post(route('threads.store'), $thread->toArray());
+    /** @test */
+    public function a_thread_with_a_title_that_ends_with_a_number_should_generate_the_proper_slug()
+    {
+        $user = create(User::class);
 
-        $this->assertTrue(Thread::whereSlug('foo-title-3')->exists());
+        $thread = create(Thread::class, ['title' => 'Some Title 24']);
+
+        $this->assertEquals($thread->fresh()->slug, 'some-title-24');
+
+        $this->actingAs($user);
+        $thread = $this->postJson(route('threads.store'), $thread->toArray())->json();
+
+        $this->assertEquals("some-title-24-{$thread['id']}", $thread['slug']);
     }
 
     /** @test */

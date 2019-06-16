@@ -65,9 +65,12 @@ class ThreadController extends Controller
         $thread->user_id = auth()->id();
         $thread->channel_id = $request->input('channel_id');
         $thread->title = $request->input('title');
-        $thread->slug = $request->input('title');
         $thread->body = $request->input('body');
         $thread->save();
+
+        if (request()->wantsJson()) {
+            return response($thread, 201);
+        }
 
         return redirect(route('threads.show', ['channel' => $thread->channel->slug, 'thread' => $thread]))
             ->with('flash', 'Your thread has been published!');
