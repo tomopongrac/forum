@@ -1,5 +1,5 @@
 <template>
-    <div :id="'reply-'+id" class="card mb-3">
+    <div :id="'reply-'+id" class="card mb-3" :class="isBest ? 'border-success' : ''">
         <div class="card-header">
             <div class="level">
                 <div class="flex">
@@ -23,9 +23,14 @@
             </div>
             <div v-else v-html="body"></div>
         </div>
-        <div class="card-footer text-muted level" v-if="canUpdate">
-            <button type="submit" class="btn btn-primary btn-sm mr-2" @click="editing = true">Edit</button>
-            <button type="submit" class="btn btn-danger btn-sm" @click="destroy">Delete</button>
+        <div class="card-footer text-muted level">
+            <div v-if="authorize('updateReply', reply)">
+                <button type="submit" class="btn btn-primary btn-sm mr-2" @click="editing = true">Edit</button>
+                <button type="submit" class="btn btn-danger btn-sm" @click="destroy">Delete</button>
+            </div>
+            <button type="submit" class="btn btn-info btn-sm ml-auto" @click="markBestReply" v-show="!isBest">Best
+                Reply?
+            </button>
         </div>
     </div>
 </template>
@@ -42,20 +47,22 @@
             return {
                 editing: false,
                 id: this.data.id,
-                body: this.data.body
+                body: this.data.body,
+                isBest: this.data.isBest,
+                reply: this.data
             };
         },
 
         computed: {
-            signIn() {
-                return window.App.signIn;
-            },
-            canUpdate() {
-                return this.authorize(user => this.data.user_id == user.id);
-            },
             ago() {
                 return moment(this.data.created_at).fromNow() + '...';
             }
+        },
+
+        created() {
+            window.events.$on('best-reply-selected', id => {
+                this.isBest = (id === this.data.id);
+            });
         },
 
         methods: {
@@ -75,6 +82,15 @@
                 axios.delete('/replies/' + this.data.id);
 
                 this.$emit('deleted', this.data.id);
+            },
+            markBestReply() {
+                axios.post('/replies/' + this.data.id + '/best')
+                    .then(response => {
+                        this.isBest = true;
+                        flash('Best reply selected');
+
+                        window.events.$emit('best-reply-selected', this.data.id);
+                    });
             }
         }
     };
