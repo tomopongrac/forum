@@ -55,4 +55,16 @@ class ReplyTest extends TestCase
             $reply->body
         );
     }
+
+    /** @test */
+    public function it_knows_it_is_the_best_reply()
+    {
+        $reply = create(Reply::class);
+
+        $this->assertFalse($reply->isBest());
+
+        $reply->thread->markBestReply($reply);
+
+        $this->assertTrue($reply->fresh()->isBest());
+    }
 }
