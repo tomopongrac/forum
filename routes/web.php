@@ -23,7 +23,7 @@ Route::get('threads/{channel}', 'ThreadController@index')->name('threads.channel
 Route::get('threads/{channel}/{thread}', 'ThreadController@show')->name('threads.show');
 
 Route::patch('threads/{channel}/{thread}', 'ThreadController@update')->name('threads.update');
-Route::post('locked-threads/{thread}', 'LockedThreadController@store')->name('locked-threads.store')->middleware('auth');
+Route::post('locked-threads/{thread}', 'LockedThreadController@store')->name('locked-threads.store')->middleware('admin');
 
 Route::post('threads/{channel}/{thread}/replies', 'ReplyController@store')->name('reply.store');
 Route::get('threads/{channel}/{thread}/replies', 'ReplyController@index')->name('reply.index');
