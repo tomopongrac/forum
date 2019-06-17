@@ -3,13 +3,21 @@
     import SubscribeButton from '../SubscribeButtonComponent';
 
     export default {
-        props: ['initialRepliesCount', 'dataLocked'],
+        props: ['thread'],
         components: { Replies, SubscribeButton },
         data() {
             return {
-                repliesCount: this.initialRepliesCount,
-                locked: this.dataLocked
+                repliesCount: this.thread.replies_count,
+                locked: this.thread.locked
             };
+        },
+
+        methods: {
+            lock() {
+                this.locked = true;
+
+                axios.post('/locked-threads/' + this.thread.slug);
+            }
         }
 
     };
