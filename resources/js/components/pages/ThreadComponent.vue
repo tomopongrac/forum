@@ -13,10 +13,10 @@
         },
 
         methods: {
-            lock() {
-                this.locked = true;
+            toggleLock() {
+                axios[this.locked ? 'delete' : 'post']('/locked-threads/' + this.thread.slug);
 
-                axios.post('/locked-threads/' + this.thread.slug);
+                this.locked = !this.locked;
             }
         }
 

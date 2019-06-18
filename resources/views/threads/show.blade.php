@@ -46,7 +46,7 @@
                             </p>
                             <p>
                                 <subscribe-button :active="{{ $thread->isSubscribedTo ? 'true' : 'false' }}" v-if="signIn"></subscribe-button>
-                                <button class="btn btn-outline-primary ml-2" v-if="authorize('isAdmin') && !locked" @click="lock">Lock</button>
+                                <button class="btn btn-outline-primary ml-2" v-if="authorize('isAdmin')" @click="toggleLock" v-text="locked ? 'Unlock' : 'Lock'">Lock</button>
                             </p>
                         </div>
                     </div>
