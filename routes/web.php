@@ -17,10 +17,11 @@ Route::get('/', function () {
 
 Auth::routes(['verify' => true]);
 
-Route::resource('threads', 'ThreadController')->except(['show', 'store', 'update']);
+Route::resource('threads', 'ThreadController')->except(['show', 'store', 'update', 'update']);
 Route::post('threads', 'ThreadController@store')->name('threads.store')->middleware('verified');
 Route::get('threads/{channel}', 'ThreadController@index')->name('threads.channel');
 Route::get('threads/{channel}/{thread}', 'ThreadController@show')->name('threads.show');
+Route::patch('threads/{channel}/{thread}', 'ThreadController@update')->name('threads.update');
 
 Route::patch('threads/{channel}/{thread}', 'ThreadController@update')->name('threads.update');
 Route::post('locked-threads/{thread}', 'LockedThreadController@store')->name('locked-threads.store')->middleware('admin');
