@@ -8,21 +8,24 @@ use App\Inspections\Spam;
 use App\Rules\SpamFree;
 use App\Thread;
 use App\Trending;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
-use Illuminate\Support\Str;
 
 class ThreadController extends Controller
 {
+    /**
+     * ThreadController constructor.
+     */
     public function __construct()
     {
         $this->middleware('auth')->except('index', 'show');
     }
 
     /**
-     * Display a listing of the resource.
+     * Display threads.
      *
+     * @param  Channel  $channel
+     * @param  ThreadFilters  $filters
+     * @param  Trending  $trending
      * @return \Illuminate\Http\Response
      */
     public function index(Channel $channel, ThreadFilters $filters, Trending $trending)
@@ -36,17 +39,7 @@ class ThreadController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('threads.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Store a thread.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -77,10 +70,12 @@ class ThreadController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display thread.
      *
-     * @param  \App\Thread  $thread
-     * @return \Illuminate\Http\Response
+     * @param  Channel  $channel
+     * @param  Thread  $thread
+     * @param  Trending  $trending
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show(Channel $channel, Thread $thread, Trending $trending)
     {
@@ -95,22 +90,12 @@ class ThreadController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Update thread.
      *
-     * @param  \App\Thread  $thread
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Thread $thread)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Thread  $thread
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @param  Channel  $channel
+     * @param  Thread  $thread
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function update(Request $request, Channel $channel, Thread $thread)
     {
@@ -127,10 +112,11 @@ class ThreadController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete thread.
      *
-     * @param  \App\Thread  $thread
-     * @return \Illuminate\Http\Response
+     * @param  Thread  $thread
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function destroy(Thread $thread)
     {
@@ -146,6 +132,8 @@ class ThreadController extends Controller
     }
 
     /**
+     * Fetch all relevant threads.
+     *
      * @param  Channel  $channel
      * @param  ThreadFilters  $filters
      * @return mixed

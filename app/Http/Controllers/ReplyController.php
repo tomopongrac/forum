@@ -15,15 +15,20 @@ use Illuminate\Support\Facades\Gate;
 
 class ReplyController extends Controller
 {
+    /**
+     * ReplyController constructor.
+     */
     public function __construct()
     {
         $this->middleware('auth')->except('index');
     }
 
     /**
-     * Display a listing of the resource.
+     * Fetch all relevant replies.
      *
-     * @return \Illuminate\Http\Response
+     * @param int   $channelId
+     * @param  Thread  $thread
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function index($channelId, Thread $thread)
     {
@@ -31,20 +36,12 @@ class ReplyController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Persist a new reply.
      *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  Channel  $channel
+     * @param  Thread  $thread
+     * @param  CreatePostRequest  $form
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Database\Eloquent\Model|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
      */
     public function store(Channel $channel, Thread $thread, CreatePostRequest $form)
     {
@@ -66,33 +63,11 @@ class ReplyController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Update an existing reply.
      *
-     * @param  \App\Reply  $reply
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Reply $reply)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Reply  $reply
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Reply $reply)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Reply  $reply
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @param  Reply  $reply
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function update(Request $request, Reply $reply)
     {

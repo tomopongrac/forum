@@ -20,7 +20,7 @@ class ThreadReceviedNewReply
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param  Reply  $reply
      */
     public function __construct(Reply $reply)
     {

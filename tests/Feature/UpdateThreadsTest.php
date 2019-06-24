@@ -10,7 +10,7 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ManageThreadsTest extends TestCase
+class UpdateThreadsTest extends TestCase
 {
     use RefreshDatabase;
 
