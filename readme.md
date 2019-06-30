@@ -41,6 +41,8 @@ And populate database with sample data
 php artisan db:seed
 ```
 
+Url for forum is http://localhost:8080 where you can login as a administrator with email "john@example.com" and password "secret"
+
 ## Features
 Only authenticated users may participate in forum.
 
